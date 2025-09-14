@@ -1,5 +1,6 @@
 ## Blockbench Version 4.12.6
 ## Modelbench Version 1.15
+## Python 3.13.4, but I don't see why it wouldn't work on later versions
 
 #region Preamble
 ## Please ensure that the texture files are in their correct location relative to either this python file
@@ -503,3 +504,4 @@ for tex in textures:
 
 
 print(f"Successfully converted {blockbench_path.name} into {blockbench_path.name.replace(".json", ".mimodel")}")
+
