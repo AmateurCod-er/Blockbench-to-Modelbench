@@ -85,8 +85,13 @@ for id in temp:
 # Done loading textures
 
 # Now to convert everything into planes
-modelbench_model = {"name": blockbench_path.name.replace(".json", "")}
+modelbench_model = {
+    "name": blockbench_path.name.replace(".json", ""),
+    "texture": "default.png",
+	"texture_size": [ 16, 16 ]
+}
 parts = []
+parts_names = set()
 ## Oh shit, apparently you CAN use decimal values in the UV of a modelbench model.
 ## That is going to make this so much easier lmao.
 
@@ -95,15 +100,25 @@ temp = blockbench_model["elements"]
 for index, bb_cube in enumerate(temp):
     mb_cube = {
         "name": None,
+        "mb_name": None,
         "position": None,
         "rotation": None,
         "shapes": None
     }
     # Set the name of the modelbench cube
     try:
-        mb_cube["name"] = bb_cube["name"]
+        mb_cube["mb_name"] = bb_cube["name"]
     except:
-        mb_cube["name"] = "cube"
+        mb_cube["mb_name"] = "cube"
+
+    temp = mb_cube["mb_name"]
+    temp2 = 2
+    while temp in parts_names:
+        temp = f"{mb_cube["mb_name"]} ({temp2})"
+        temp2 += 1
+    mb_cube["name"] = temp
+    parts_names.add(temp)
+    # Done setting the name
 
     # Determine the position of the cube
     if favour_rotation:
@@ -494,15 +509,18 @@ modelbench_model["parts"] = parts
 # Save the mimodel itself (very easy)
 os.makedirs(minemator_path, exist_ok=True)
 with open(minemator_path/blockbench_path.name.replace(".json", ".mimodel"), "w") as file:
-    json.dump(modelbench_model, file, indent=4)
+    json.dump(modelbench_model, file, indent="\t")
 
 # Save the images (also very easy)
 for tex in textures:
     textures[tex].save(minemator_path/(tex+".png"), quality=100, optimize=True)
+tex = Image.new("L", (16, 16), 0)
+tex.save(minemator_path/"default.png", quality=100, optimize=True)
 # Saving done
 
 
 
 print(f"Successfully converted {blockbench_path.name} into {blockbench_path.name.replace(".json", ".mimodel")}")
+
 
 
