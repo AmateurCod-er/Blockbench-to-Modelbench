@@ -397,20 +397,20 @@ for index, bb_cube in enumerate(temp):
         if "rotation" not in bb_plane:
             if direction in ["north", "south"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][0]/mb_plane["to"][0], # X
-                    bb_cube["size"][1]/mb_plane["to"][1], # Y
+                    bb_cube["size"][0]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1, # X
+                    bb_cube["size"][1]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1, # Y
                     1
                 ]
             elif direction in ["west", "east"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][2]/mb_plane["to"][0], # Z
-                    bb_cube["size"][1]/mb_plane["to"][1], # Y
+                    bb_cube["size"][2]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1, # Z
+                    bb_cube["size"][1]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1, # Y
                     1
                 ]
             elif direction in ["down", "up"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][0]/mb_plane["to"][0], # X
-                    bb_cube["size"][2]/mb_plane["to"][1], # Z
+                    bb_cube["size"][0]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1, # X
+                    bb_cube["size"][2]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1, # Z
                     1
                 ]
             else:
@@ -418,20 +418,20 @@ for index, bb_cube in enumerate(temp):
         elif bb_plane["rotation"] == 90:
             if direction in ["north", "south"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][1]/mb_plane["to"][0],
-                    bb_cube["size"][0]/mb_plane["to"][1],
+                    bb_cube["size"][1]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][0]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             elif direction in ["west", "east"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][1]/mb_plane["to"][0],
-                    bb_cube["size"][2]/mb_plane["to"][1],
+                    bb_cube["size"][1]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][2]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             elif direction in ["down", "up"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][2]/mb_plane["to"][0],
-                    bb_cube["size"][0]/mb_plane["to"][1],
+                    bb_cube["size"][2]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][0]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             else:
@@ -439,20 +439,20 @@ for index, bb_cube in enumerate(temp):
         elif bb_plane["rotation"] == 180:
             if direction in ["north", "south"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][0]/mb_plane["to"][0],
-                    bb_cube["size"][1]/mb_plane["to"][1],
+                    bb_cube["size"][0]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][1]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             elif direction in ["west", "east"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][2]/mb_plane["to"][0],
-                    bb_cube["size"][1]/mb_plane["to"][1],
+                    bb_cube["size"][2]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][1]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             elif direction in ["down", "up"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][0]/mb_plane["to"][0],
-                    bb_cube["size"][2]/mb_plane["to"][1],
+                    bb_cube["size"][0]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][2]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             else:
@@ -460,20 +460,20 @@ for index, bb_cube in enumerate(temp):
         elif bb_plane["rotation"] == 270:
             if direction in ["north", "south"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][1]/mb_plane["to"][0],
-                    bb_cube["size"][0]/mb_plane["to"][1],
+                    bb_cube["size"][1]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][0]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             elif direction in ["west", "east"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][1]/mb_plane["to"][0],
-                    bb_cube["size"][2]/mb_plane["to"][1],
+                    bb_cube["size"][1]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][2]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             elif direction in ["down", "up"]:
                 mb_plane["scale"] = [
-                    bb_cube["size"][2]/mb_plane["to"][0],
-                    bb_cube["size"][0]/mb_plane["to"][1],
+                    bb_cube["size"][2]/mb_plane["to"][0] if mb_plane["to"][0] != 0 else 1,
+                    bb_cube["size"][0]/mb_plane["to"][1] if mb_plane["to"][1] != 0 else 1,
                     1
                 ]
             else:
@@ -504,4 +504,5 @@ for tex in textures:
 
 
 print(f"Successfully converted {blockbench_path.name} into {blockbench_path.name.replace(".json", ".mimodel")}")
+
 
