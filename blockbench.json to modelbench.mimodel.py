@@ -5,6 +5,7 @@
 #region Preamble
 ## Please ensure that the texture files are in their correct location relative to either this python file
 ## or the blockbench file being loaded. (You will have to do this manually).
+## Alternatively, if you have no duplicate file names, you can put them in the same directory as the .json file.
 
 ## For example, if this python file is located at "C:/Users/blockbench.json to modelbench.mimodel.py", and the
 ## texture file is listed as "textures/fancy" in the blockbench model, please ensure that it's located
@@ -13,6 +14,10 @@
 ## Or, if the blockbench model being loaded is at "D:/Downloads/texturepack/FancySword.json", and the texture
 ## file is still listed as "textures/fancy" in the blockbench model, please ensure that it's located at
 ## "D:/Downloads/texturepack/textures/fancy.png", regardless of where the python file is located.
+
+## Finally, if the blockbench model being loaded is at "D:/Downloads/texturepack/FancySword.json", and the texture
+## file is still listed as "textures/fancy" in the blockbench model, please ensure that it's located at
+## "E:/Downloads/texturepack/fancy.png", in the same directory as the blockbench file.
 
 ## I don't think that blockbench supports anything other than PNGs, but this code only checks for PNGs.
 ## The code that loads the textures is easy to fine (Line 33 and 35) incase you don't have PNGS for some reason.
@@ -24,8 +29,9 @@
 ####################################################
 from pathlib import Path
 blockbench_path = Path(r"D:\Documents\testing.json") # Input
-minemator_path = Path(r".\converted model")
+minemator_path = Path(r".\converted model\~")
 ## Default output writes to a folder in the same directory as the python script
+## Use ~ to be replaced by the file name (Incase you need that). 
 
 #############################
 # currently doesnt work lol #
@@ -48,6 +54,11 @@ zero_dim_spacing = 0.0005
 ## If you're viewing the model from close up, a smaller value is reccomended (0.0005)
 ## If you're viewing the model from a distance, a larger value is reccomended (0.005)
 
+keep_file_names = True
+## I'm not sure how exactly blockbench stores its textures, but if you for some reason need
+## those IDs instead of the actual file names, set this to false.
+## If you have no clue what i'm talking about (like me), leave this to True
+
 #endregion
 
 
@@ -69,19 +80,29 @@ if favour_position == favour_rotation:
 with open(blockbench_path, "r") as file:
     blockbench_model = json.load(file)
 
+# Replace any ~ in the output path
+minemator_path = Path(str(minemator_path).replace("~", blockbench_path.name.replace(".json", "")))
 
 # Load the textures
 textures = dict()
+tex_id_to_name = dict()
 temp = blockbench_model["textures"]
 for id in temp:
     try:
         try:
             tex = Image.open(f"{temp[id]}.png")
         except:
-            tex = Image.open(f"{blockbench_path.parent/temp[id]}.png")
+            try:
+                tex = Image.open(f"{blockbench_path.parent/temp[id]}.png")
+            except:
+                tex = Image.open(f"{blockbench_path.parent/temp[id].rsplit("/", 1)[-1]}.png")
     except:
         raise Exception(f"Texture '{temp[id]}.png' not found")
     textures[id] = tex
+    if keep_file_names:
+        tex_id_to_name[id] = temp[id].rsplit("/", 1)[-1]
+    else:
+        tex_id_to_name[id] = id
 # Done loading textures
 
 # Now to convert everything into planes
@@ -164,7 +185,7 @@ for index, bb_cube in enumerate(temp):
         mb_plane = {
             "type": "plane",
             "description": direction,
-            "texture": bb_plane["texture"].replace("#", "")+".png",
+            "texture": tex_id_to_name[bb_plane["texture"].replace("#", "")]+".png",
             "texture_size": texture_size,
             "from": [0, 0, 0],
             "to":[
@@ -513,7 +534,7 @@ with open(minemator_path/blockbench_path.name.replace(".json", ".mimodel"), "w")
 
 # Save the images (also very easy)
 for tex in textures:
-    textures[tex].save(minemator_path/(tex+".png"), quality=100, optimize=True)
+    textures[tex].save(minemator_path/(tex_id_to_name[tex]+".png"), quality=100, optimize=True)
 tex = Image.new("L", (16, 16), 0)
 tex.save(minemator_path/"default.png", quality=100, optimize=True)
 # Saving done
@@ -521,6 +542,7 @@ tex.save(minemator_path/"default.png", quality=100, optimize=True)
 
 
 print(f"Successfully converted {blockbench_path.name} into {blockbench_path.name.replace(".json", ".mimodel")}")
+
 
 
 
