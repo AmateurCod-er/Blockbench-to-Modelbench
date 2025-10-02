@@ -14,3 +14,4 @@ Additionally, you have to manually move the textures into the right spots.
 
 ## Log:
 ##### 2025-09-14: Uploaded it to github
+##### 2025-10-02: Textures can now be loaded from the same directory as the model, textures can now be saved keeping their file name
